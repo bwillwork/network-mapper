@@ -74,3 +74,12 @@ $offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175);
 //
 
 //@import "icon-list";
+
+body {
+  padding: 1.5rem;
+  //background-color: $body-bg;
+  background-image: linear-gradient(to bottom right, #f8f3eb, #c2beb3);
+  background-attachment: fixed;
+  color: $dark;
+}
+

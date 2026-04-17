@@ -3,12 +3,52 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap w/ Webpack</title>
+    <title>Network Mapper</title>
 </head>
 <body>
 <div class="container py-4 px-3 mx-auto">
-    <h1>Hello, Bootstrap and Webpack!</h1>
-    <button class="btn btn-primary">Primary button</button>
+    <div class="row">
+        <div class="col">
+            <h1>D3 Network Graph</h1>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div id="graph" class="col"></div>
+    </div>
+    <div class="row mt-2">
+        <div class="col">
+            <ul class="nav nav-underline justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item w-25" role="presentation">
+                    <button class="nav-link active w-100" id="link-tab" data-bs-toggle="tab" data-bs-target="#link-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">
+                        Create With Controls
+                    </button>
+                </li>
+                <li class="nav-item w-25" role="presentation">
+                    <button class="nav-link w-100" id="text-tab" data-bs-toggle="tab" data-bs-target="#text-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                        Create Using JSON
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content mt-4" id="myTabContent">
+
+                <!-- Link -->
+                <div class="tab-pane fade show active justify-content-center" id="link-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                    <div id="graph-elements"></div>
+                    <button>Add Node</button>
+                    <button>Add Edge</button>
+                </div>
+
+                <div class="tab-pane fade active justify-content-center" id="text-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="1">
+                    <div class="d-flex flex-column">
+                        <textarea id="json-input"></textarea>
+                        <button id="submit-btn" class="btn btn-dark mt-2">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
 </div>
 </body>
 </html>

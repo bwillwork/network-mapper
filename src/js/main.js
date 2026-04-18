@@ -32,6 +32,19 @@ const svg = d3.select("#graph")
     //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 
+const nodesContainer = document.querySelector('#nodes');
+const edgesContainer = document.querySelector('#edges');
+
+const addNodeBtn = document.querySelector('#add-node-btn');
+const addEdgeBtn = document.querySelector('#add-edge-btn');
+
+addNodeBtn.addEventListener('click',function() {
+    console.log('add node');
+});
+
+addEdgeBtn.addEventListener('click',function() {
+    console.log('add edge');
+});
 
 
 submitBtn.addEventListener('click',function() {

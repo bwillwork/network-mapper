@@ -31,6 +31,9 @@ const svg = d3.select("#graph")
     .append("g")
     //.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
+
+
 submitBtn.addEventListener('click',function() {
     const data = JSON.parse(jsonInput.value);
     console.log('data: ',data);

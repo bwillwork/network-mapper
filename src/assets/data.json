@@ -41,53 +41,53 @@
       "name": "J"
     }
   ],
-  "links": [
+  "edges": [
 
     {
-      "source": 1,
-      "target": 2
+      "from": 1,
+      "to": 2
     },
     {
-      "source": 1,
-      "target": 5
+      "from": 1,
+      "to": 5
     },
     {
-      "source": 1,
-      "target": 6
+      "from": 1,
+      "to": 6
     },
 
     {
-      "source": 2,
-      "target": 3
+      "from": 2,
+      "to": 3
     },
     {
-      "source": 2,
-      "target": 7
+      "from": 2,
+      "to": 7
     }
   ,
 
     {
-      "source": 3,
-      "target": 4
+      "from": 3,
+      "to": 4
     },
     {
-      "source": 8,
-      "target": 3
+      "from": 8,
+      "to": 3
     }
   ,
     {
-      "source": 4,
-      "target": 5
+      "from": 4,
+      "to": 5
     }
   ,
 
     {
-      "source": 4,
-      "target": 9
+      "from": 4,
+      "to": 9
     },
     {
-      "source": 5,
-      "target": 10
+      "from": 5,
+      "to": 10
     }
   ]
 }

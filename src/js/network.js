@@ -1,12 +1,13 @@
 import * as _ from 'lodash';
 import * as d3 from "d3";
 
-export function createGraph(containerId, {nodes,edges}, {width,height}) {
+export function createGraph(containerId, {nodes,links}, {width,height}) {
 
     const data = {
         nodes: [...nodes],
-        edges: [...edges]
+        links: [...links]
     };
+    const RADIUS = 10;
 
     // init svg
     const svg = d3.select(containerId)
@@ -18,26 +19,42 @@ export function createGraph(containerId, {nodes,edges}, {width,height}) {
 
     function draw(data) {
 
-        console.log('data: ',data);
-        console.debug('draw');
-
-        function ticked() {
-            node
-                .attr("cx", function (d) { return d.x; })
-                .attr("cy", function(d) { return d.y; });
-
-            edge
-                .attr("x1", function(d) { return d.source.x; })
-                .attr("y1", function(d) { return d.source.y; })
-                .attr("x2", function(d) { return d.target.x; })
-                .attr("y2", function(d) { return d.target.y; });
+        svg.selectAll(`g`).remove();
 
 
-        }
+        const simulation = d3.forceSimulation(data.nodes) // apply the simulation to our array of nodes
+            .force( 'link', d3.forceLink(data.links).id((d) => d.id))// Force #1: links between nodes
+            .force('collide', d3.forceCollide().radius(RADIUS))// Force #2: avoid node overlaps
+            .force('charge', d3.forceManyBody())// Force #3: attraction or repulsion between nodes
+            .force('center', d3.forceCenter(width / 2, height / 2))// Force #4: nodes are attracted by the center of the chart area
+            .on('tick',() => {
+                link
+                    .attr("x1", d => d.source.x)
+                    .attr("y1", d => d.source.y)
+                    .attr("x2", d => d.target.x)
+                    .attr("y2", d => d.target.y);
+                node
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y);
+            });
+
+        const link = svg.append("g")
+            .attr("stroke","#222")
+            .selectAll("line")
+            .data(data.links)
+            .join("line");
+
+        const node = svg.append("g")
+            .selectAll("circle")
+            .data(data.nodes)
+            .join("circle")
+            .attr("r", RADIUS)
+            .call(drag(simulation));
 
         function drag(simulation) {
+
             function dragstarted(event) {
-                //if (!event.active) simulation.alphaTarget(0.3).restart();
+                if (!event.active) simulation.alphaTarget(0.3).restart();
                 event.subject.fx = event.subject.x;
                 event.subject.fy = event.subject.y;
             }
@@ -48,7 +65,7 @@ export function createGraph(containerId, {nodes,edges}, {width,height}) {
             }
 
             function dragended(event) {
-                //if (!event.active) simulation.alphaTarget(0);
+                if (!event.active) simulation.alphaTarget(0);
                 event.subject.fx = null;
                 event.subject.fy = null;
             }
@@ -59,33 +76,9 @@ export function createGraph(containerId, {nodes,edges}, {width,height}) {
                 .on("end", dragended);
         }
 
-        /*
-        const forceNode = d3.forceManyBody();
-        const forceLink = d3.forceLink(data.edges).id(function(d) { return d.id; });
-
-        const simulation = d3.forceSimulation(data.nodes)
-            .force("link", forceLink)
-            .force("charge", forceNode)
-            .force("center",  d3.forceCenter(width / 2, height / 2))
-            .on("tick", ticked);
 
 
-         */
 
-        const node = svg.append("g")
-            .selectAll("circle")
-            .data(data.nodes)
-            .join("circle")
-            .attr("r", 10)
-            .style("fill", "#69b3a2")
-            //.call(drag(simulation));
-            .call(drag())
-
-        const edge = svg.append("g")
-            .selectAll("line")
-            .data(data.edges)
-            .join("line")
-            .style("stroke", "#222");
 
     }
 
@@ -94,8 +87,6 @@ export function createGraph(containerId, {nodes,edges}, {width,height}) {
     draw(data);
 
     // Exposed Functions
-
-
     function addNode(node) {
         const canAdd = data.nodes.findIndex(n => n.id === node.id) === -1;
         if(canAdd) {
@@ -106,30 +97,32 @@ export function createGraph(containerId, {nodes,edges}, {width,height}) {
 
     function removeNode(id) {
         const index = data.nodes.findIndex(n => n.id === id);
+        console.log(id,index,data.nodes);
         if(index !== -1) {
             data.nodes.splice(index,1);
-            const edgeIndices = data.edges.reduce((agg,e,index) => {
+            const edgeIndices = data.links.reduce((agg, e, index) => {
                 if(e.source === id || e.target === id) return [...agg,index];
                 return [...agg];
             },[]);
-            edgeIndices.forEach(i => data.edges.splice(i,1));
+            edgeIndices.forEach(i => data.links.splice(i,1));
             draw(data);
         }
     }
 
-    function addEdge({source,target}) {
-        console.log(source,target);
-        const canAdd = data.edges.findIndex(e => e.source === source && e.target === target) === -1;
+    function addLink({source,target}) {
+        const canAdd = data.links.findIndex(e => e.source === source && e.target === target) === -1;
         if(canAdd) {
-            data.edges.push({source, target});
+            console.log({source,target});
+            data.links.push({source, target});
             draw(data);
         }
     }
 
-    function removeEdge({source,to}) {
-        const index = data.nodes.findIndex(e => e.source === source && e.target === to);
+    function removeLink({source,target}) {
+        const index = data.links.findIndex(e => e.source.id === source && e.target.id === target);
+        console.log(source,target,index,data.links);
         if(index !== -1) {
-            data.edges.splice(index,1);
+            data.links.splice(index,1);
             draw(data);
         }
     }
@@ -137,8 +130,8 @@ export function createGraph(containerId, {nodes,edges}, {width,height}) {
     return {
         addNode,
         removeNode,
-        addEdge,
-        removeEdge
+        addLink,
+        removeLink
     };
 
 }

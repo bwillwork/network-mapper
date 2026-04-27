@@ -21,7 +21,7 @@ console.log(dimensions);
 const jsonInput = document.querySelector('#json-input');
 const submitBtn = document.querySelector('#submit-btn');
 
-const network = createGraph('#graph',{nodes:[],edges:[]},dimensions);
+const network = createGraph('#graph',{nodes:[],links:[]},dimensions);
 
 
 const nodesContainer = document.querySelector('#nodes');
@@ -36,6 +36,7 @@ function addNode() {
     const nameInputVal = `${document.querySelector('#node-name').value}`;
     if(idInputVal && nameInputVal) {
         const row = document.createElement('div');
+        row.setAttribute("id",`node-row-${idInputVal}`);
         const idContainer = document.createElement('span');
         const nameContainer = document.createElement('span');
         const removeBtn = document.createElement('button');
@@ -56,14 +57,23 @@ function addNode() {
 }
 function removeNode() {
     console.log('remove node - ',this);
-    //const nodeId
+
+    const nodeId = this.getAttribute("data-node-id");
+    if(nodeId) {
+        const rowId = `node-row-${nodeId}`;
+        let row = document.querySelector(`#${rowId}`);
+        row.remove();
+        row = null;
+        network.removeNode(parseInt(nodeId));
+    }
 }
-function addEdge() {
+function addLink() {
     console.log('add edge');
     const fromInputVal = `${document.querySelector('#from-id').value}`;
     const toInputVal = `${document.querySelector('#to-id').value}`;
     if(fromInputVal && toInputVal) {
         const row = document.createElement('div');
+        row.setAttribute("id",`row-from-${fromInputVal}-to-${toInputVal}`);
         const fromContainer = document.createElement('span');
         const toContainer = document.createElement('span');
         const removeBtn = document.createElement('button');
@@ -71,7 +81,7 @@ function addEdge() {
         removeBtn.classList.add('btn','btn-danger');
         removeBtn.setAttribute('data-from-id',fromInputVal);
         removeBtn.setAttribute('data-to-id',toInputVal);
-        removeBtn.addEventListener('click',removeEdge);
+        removeBtn.addEventListener('click',removeLink);
 
         fromContainer.appendChild(document.createTextNode(fromInputVal));
         toContainer.appendChild(document.createTextNode(toInputVal));
@@ -79,16 +89,25 @@ function addEdge() {
         edgesContainer.appendChild(row);
 
 
-        network.addEdge({source: parseInt(fromInputVal),target: parseInt(toInputVal)});
+        network.addLink({source: parseInt(fromInputVal),target: parseInt(toInputVal)});
 
     }
 }
-function removeEdge() {
+function removeLink() {
     console.log('remove edge - ',this);
+    const fromId = this.getAttribute("data-from-id");
+    const toId = this.getAttribute("data-to-id");
+    if(fromId && toId) {
+        const rowId = `row-from-${fromId}-to-${toId}`;
+        let row = document.querySelector(`#${rowId}`);
+        row.remove();
+        row = null;
+        network.removeLink({source: parseInt(fromId),target: parseInt(toId)});
+    }
 }
 
 addNodeBtn.addEventListener('click',addNode);
-addEdgeBtn.addEventListener('click',addEdge);
+addEdgeBtn.addEventListener('click',addLink);
 
 submitBtn.addEventListener('click',function() {
     const data = JSON.parse(jsonInput.value);

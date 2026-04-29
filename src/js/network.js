@@ -6,13 +6,15 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
 
     let isDirected = constants.isDirected;
     let colors = {...constants.colors};
+    let showNodeLabels = constants.showNodeLabels;
     const data = {
         nodes: [...nodes],
         links: [...links]
     };
 
     // init svg
-    let svg = d3.select(containerId)
+    let container = d3.select(containerId).style('background-color',colors.background);
+    let svg = container
         .append("svg")
         .attr("style", "border: black solid 1px;");
 
@@ -32,24 +34,31 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
 
     function draw(data) {
 
+        container.style('background-color',colors.background);
         arrowMarker.attr("fill",colors.edges);// Needs to be set again
 
         svg.selectAll(`g`).remove();
 
+        const forceLink = d3.forceLink(data.links).id((d) => d.id);
+        const forceCollide = d3.forceCollide().radius(constants.radius);
+        const forceManyBody = d3.forceManyBody();
+        const forceCenter = d3.forceCenter(width / 2, height / 2)
+
         const simulation = d3.forceSimulation(data.nodes) // apply the simulation to our array of nodes
-            .force( 'link', d3.forceLink(data.links).id((d) => d.id)) // force between links and nodes
-            .force('collide', d3.forceCollide().radius(constants.radius)) // force to avoid node overlaps
-            .force('charge', d3.forceManyBody()) // force to attract or repulse nodes (between nodes)
-            .force('center', d3.forceCenter(width / 2, height / 2)) // The force to attract nodes to the center of the chart
+            .force( 'link', forceLink) // force between links and nodes
+            .force('collide', forceCollide) // force to avoid node overlaps
+            .force('charge', forceManyBody) // force to attract or repulse nodes (between nodes)
+            .force('center', forceCenter) // The force to attract nodes to the center of the chart
             .on('tick',() => {
                 link
                     .attr("x1", d => d.source.x)
                     .attr("y1", d => d.source.y)
                     .attr("x2", d => d.target.x)
                     .attr("y2", d => d.target.y);
-                node
-                    .attr("cx", d => d.x)
-                    .attr("cy", d => d.y);
+
+                if(showNodeLabels) node.attr("transform", d => "translate(" + d.x + "," + d.y + ")");
+                else node.attr("cx", d => d.x).attr("cy", d => d.y);
+
             });
 
         const link = svg.append("g")
@@ -60,13 +69,37 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
 
         if(isDirected) link.attr("marker-end", "url(#arrow)");
 
-        const node = svg.append("g")
-            .selectAll("circle")
-            .data(data.nodes)
-            .join("circle")
-            .attr("r", constants.radius)
-            .attr("fill",colors.nodes)
-            .call(drag(simulation));
+        let node;
+        if(showNodeLabels) {
+            node = svg.append("g")
+                .selectAll("g")
+                .data(data.nodes)
+                .enter()
+                .append('g');
+
+            node.append("circle")
+                .attr("r", constants.radius)
+                .attr("fill",colors.nodes);
+
+            node.append('text')
+                .text(d => d.name)
+                .attr("x", 12)
+                .attr("y", 3);
+
+            node.call(drag(simulation))
+        } else {
+            node = svg.append("g")
+                .selectAll("circle")
+                .data(data.nodes)
+                .join("circle")
+                .attr("r", constants.radius)
+                .attr("fill",colors.nodes);
+
+            node.call(drag(simulation))
+        }
+
+
+
 
         function drag(simulation) {
 

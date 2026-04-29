@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="row mt-2">
-        <div id="graph" class="col"></div>
+        <div id="graph" class="col p-0 m-2"></div>
     </div>
     <div class="row mt-2">
         <div class="col">
@@ -21,12 +21,26 @@
             <input id="is-directed-input" type="checkbox" />
         </div>
         <div class="col">
+            <label for="show-node-labels-input">Show Node Labels: </label>
+            <input id="show-node-labels-input" type="checkbox" />
+        </div>
+        <div class="col">
+            <label for="force-strength-input">Force Strength: </label>
+            <input id="force-strength-input" type="range" style="color: #222"/>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col">
             <label for="node-color-input">Node Colors: </label>
-            <input id="node-color-input" type="color" />
+            <input id="node-color-input" class="w-25" type="color"/>
         </div>
         <div class="col">
             <label for="edge-color-input">Edge Colors: </label>
-            <input id="edge-color-input" type="color" />
+            <input id="edge-color-input" class="w-25" type="color" />
+        </div>
+        <div class="col">
+            <label for="background-color-input">Background Color: </label>
+            <input id="background-color-input" class="w-25" type="color" />
         </div>
     </div>
     <div class="row mt-2">

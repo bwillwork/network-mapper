@@ -84,6 +84,8 @@ elms.isDirectedInput.addEventListener('change',function () {
     network.setIsDirected(isDirected);
 });
 
+// TODO: Add label functionality
+
 elms.nodeColorInput.value = constants.colors.nodes;
 elms.nodeColorInput.addEventListener('change',function() {
     console.log('color: ',elms.nodeColorInput.value);
@@ -98,6 +100,15 @@ elms.edgeColorInput.addEventListener('change',function() {
     console.log('color: ',elms.edgeColorInput.value);
     const newColor = elms.edgeColorInput.value;
     networkCache.updateEdgeColor(newColor);
+    const colors = networkCache.getState().colors;
+    network.updateColors(colors);
+});
+
+elms.backgroundColorInput.value = constants.colors.background;
+elms.backgroundColorInput.addEventListener('change',function() {
+    console.log('color: ',elms.backgroundColorInput.value);
+    const newColor = elms.backgroundColorInput.value;
+    networkCache.updateBackgroundColor(newColor);
     const colors = networkCache.getState().colors;
     network.updateColors(colors);
 });

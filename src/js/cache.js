@@ -4,10 +4,7 @@ import constants from "./constants";
 function buildNetworkCache(directed) {
 
     let isDirected = _.isBoolean(directed) && directed;// Defaults to a non-directed graph network
-    let colors = {
-        nodes: constants.colors.nodes,
-        edges: constants.colors.edges
-    };
+    let colors = {...constants.colors};
     const data = {
         nodes: [],
         links: []
@@ -50,6 +47,9 @@ function buildNetworkCache(directed) {
     function updateEdgeColor(newColor) {
         colors.edges = newColor;
     }
+    function updateBackgroundColor(newColor) {
+        colors.background = newColor;
+    }
     function clear() {
         data.nodes = [];
         data.links = [];
@@ -70,6 +70,7 @@ function buildNetworkCache(directed) {
         toggleIsDirected,
         updateNodeColor,
         updateEdgeColor,
+        updateBackgroundColor,
         clear,
         updateNetworkData,
         getState
@@ -93,7 +94,10 @@ function buildDOMCache() {
         edgeToInput: '#to-id',
         isDirectedInput: '#is-directed-input',
         nodeColorInput: '#node-color-input',
-        edgeColorInput: '#edge-color-input'
+        edgeColorInput: '#edge-color-input',
+        showNodeLabelsInput: '#show-node-labels-input',
+        backgroundColorInput: '#background-color-input',
+        forceStrengthInput: '#force-strength-input'
     };
 
     return {
@@ -113,7 +117,10 @@ function buildDOMCache() {
             edgeToInput: document.querySelector(selectors.edgeToInput),
             isDirectedInput: document.querySelector(selectors.isDirectedInput),
             nodeColorInput: document.querySelector(selectors.nodeColorInput),
-            edgeColorInput: document.querySelector(selectors.edgeColorInput)
+            edgeColorInput: document.querySelector(selectors.edgeColorInput),
+            showNodeLabelsInput: document.querySelector(selectors.showNodeLabelsInput),
+            backgroundColorInput: document.querySelector(selectors.backgroundColorInput),
+            forceStrengthInput: document.querySelector(selectors.forceStrengthInput)
         }
     };
 }

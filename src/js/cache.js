@@ -80,7 +80,8 @@ function buildDOMCache() {
         nodeIdInput: '#node-id',
         nodeNameInput: '#node-name',
         edgeFromInput: '#from-id',
-        edgeToInput: '#to-id'
+        edgeToInput: '#to-id',
+        isDirectedInput: '#is-directed-input'
     };
 
     return {
@@ -97,7 +98,8 @@ function buildDOMCache() {
             nodeIdInput: document.querySelector(selectors.nodeIdInput),
             nodeNameInput: document.querySelector(selectors.nodeNameInput),
             edgeFromInput: document.querySelector(selectors.edgeFromInput),
-            edgeToInput: document.querySelector(selectors.edgeToInput)
+            edgeToInput: document.querySelector(selectors.edgeToInput),
+            isDirectedInput: document.querySelector(selectors.isDirectedInput)
         }
     };
 }

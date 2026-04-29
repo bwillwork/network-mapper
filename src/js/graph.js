@@ -1,3 +1,5 @@
+
+/*
 function test() {
 
     const N = d3.map(nodes, nodeId).map(intern);
@@ -111,3 +113,5 @@ function test() {
 
 
 }
+
+ */

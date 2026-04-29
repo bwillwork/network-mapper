@@ -75,6 +75,14 @@ function removeLink() {
 elms.addNodeBtn.addEventListener('click',addNode);
 elms.addEdgeBtn.addEventListener('click',addLink);
 
+elms.isDirectedInput.checked = false;
+elms.isDirectedInput.addEventListener('change',function () {
+    console.log('This has changed');
+    networkCache.toggleIsDirected();
+    const isDirected = networkCache.getState().isDirected;
+    network.setIsDirected(isDirected);
+});
+
 elms.submitBtn.addEventListener('click',function() {
     const data = JSON.parse(elms.jsonInput.value);
     networkCache.updateNetworkData(data);

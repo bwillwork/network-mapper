@@ -3,6 +3,7 @@ import * as d3 from "d3";
 
 export function createGraph(containerId, {nodes,links}, {width,height}) {
 
+    let isDirected = false;
     const data = {
         nodes: [...nodes],
         links: [...links]
@@ -10,17 +11,26 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
     const RADIUS = 10;
 
     // init svg
-    const svg = d3.select(containerId)
+    let svg = d3.select(containerId)
         .append("svg")
-        .attr("style", "border: black solid 1px;")
-        .append("g");
+        .attr("style", "border: black solid 1px;");
 
+    // Adding arrows to the definitions
+    svg.append("svg:defs").append("svg:marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 -5 10 10")
+        .attr('refX', 30)//so that it comes towards the center.
+        .attr("markerWidth", 5)
+        .attr("markerHeight", 5)
+        .attr("orient", "auto")
+        .append("svg:path")
+        .attr("d", "M0,-5L10,0L0,5");
 
+    svg = svg.append("g");
 
     function draw(data) {
 
         svg.selectAll(`g`).remove();
-
 
         const simulation = d3.forceSimulation(data.nodes) // apply the simulation to our array of nodes
             .force( 'link', d3.forceLink(data.links).id((d) => d.id))// Force #1: links between nodes
@@ -43,6 +53,8 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
             .selectAll("line")
             .data(data.links)
             .join("line");
+
+        if(isDirected) link.attr("marker-end", "url(#arrow)");
 
         const node = svg.append("g")
             .selectAll("circle")
@@ -87,8 +99,14 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         draw(data);
     }
 
+    function setIsDirected(value) {
+        isDirected = _.isBoolean(value) && value;// Always default to false
+        draw(data);
+    }
+
     return {
-        updateAllData
+        updateAllData,
+        setIsDirected
     };
 
 }

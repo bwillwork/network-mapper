@@ -1,14 +1,15 @@
 import * as _ from 'lodash';
 import * as d3 from "d3";
+import constants from "./constants";
 
 export function createGraph(containerId, {nodes,links}, {width,height}) {
 
-    let isDirected = false;
+    let isDirected = constants.isDirected;
+    let colors = {...constants.colors};
     const data = {
         nodes: [...nodes],
         links: [...links]
     };
-    const RADIUS = 10;
 
     // init svg
     let svg = d3.select(containerId)
@@ -16,7 +17,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         .attr("style", "border: black solid 1px;");
 
     // Adding arrows to the definitions
-    svg.append("svg:defs").append("svg:marker")
+    const arrowMarker = svg.append("svg:defs").append("svg:marker")
         .attr("id", "arrow")
         .attr("viewBox", "0 -5 10 10")
         .attr('refX', 30)//so that it comes towards the center.
@@ -24,19 +25,22 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         .attr("markerHeight", 5)
         .attr("orient", "auto")
         .append("svg:path")
+        .attr("fill",colors.edges)
         .attr("d", "M0,-5L10,0L0,5");
 
     svg = svg.append("g");
 
     function draw(data) {
 
+        arrowMarker.attr("fill",colors.edges);// Needs to be set again
+
         svg.selectAll(`g`).remove();
 
         const simulation = d3.forceSimulation(data.nodes) // apply the simulation to our array of nodes
-            .force( 'link', d3.forceLink(data.links).id((d) => d.id))// Force #1: links between nodes
-            .force('collide', d3.forceCollide().radius(RADIUS))// Force #2: avoid node overlaps
-            .force('charge', d3.forceManyBody())// Force #3: attraction or repulsion between nodes
-            .force('center', d3.forceCenter(width / 2, height / 2))// Force #4: nodes are attracted by the center of the chart area
+            .force( 'link', d3.forceLink(data.links).id((d) => d.id)) // force between links and nodes
+            .force('collide', d3.forceCollide().radius(constants.radius)) // force to avoid node overlaps
+            .force('charge', d3.forceManyBody()) // force to attract or repulse nodes (between nodes)
+            .force('center', d3.forceCenter(width / 2, height / 2)) // The force to attract nodes to the center of the chart
             .on('tick',() => {
                 link
                     .attr("x1", d => d.source.x)
@@ -49,7 +53,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
             });
 
         const link = svg.append("g")
-            .attr("stroke","#222")
+            .attr("stroke",colors.edges)
             .selectAll("line")
             .data(data.links)
             .join("line");
@@ -60,7 +64,8 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
             .selectAll("circle")
             .data(data.nodes)
             .join("circle")
-            .attr("r", RADIUS)
+            .attr("r", constants.radius)
+            .attr("fill",colors.nodes)
             .call(drag(simulation));
 
         function drag(simulation) {
@@ -93,7 +98,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
     draw(data);
 
     // Exposed Functions
-    function updateAllData({nodes,links}) {
+    function updateNetworkData({nodes,links}) {
         data.nodes = [...nodes.map(n => ({...n}))];
         data.links = [...links.map(l => ({...l}))];
         draw(data);
@@ -104,9 +109,15 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         draw(data);
     }
 
+    function updateColors(newColors) {
+        colors = {...newColors};
+        draw(data);
+    }
+
     return {
-        updateAllData,
-        setIsDirected
+        updateNetworkData,
+        setIsDirected,
+        updateColors
     };
 
 }

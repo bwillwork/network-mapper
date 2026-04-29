@@ -1,8 +1,13 @@
 import * as _ from 'lodash';
+import constants from "./constants";
 
 function buildNetworkCache(directed) {
 
     let isDirected = _.isBoolean(directed) && directed;// Defaults to a non-directed graph network
+    let colors = {
+        nodes: constants.colors.nodes,
+        edges: constants.colors.edges
+    };
     const data = {
         nodes: [],
         links: []
@@ -39,6 +44,12 @@ function buildNetworkCache(directed) {
     function toggleIsDirected() {
         isDirected = !isDirected;
     }
+    function updateNodeColor(newColor) {
+        colors.nodes = newColor;
+    }
+    function updateEdgeColor(newColor) {
+        colors.edges = newColor;
+    }
     function clear() {
         data.nodes = [];
         data.links = [];
@@ -48,10 +59,8 @@ function buildNetworkCache(directed) {
         data.links = [...json.links];
     }
     function getState() {
-        return {isDirected,network: {...data}};
+        return {colors,isDirected,network: {...data}};
     }
-
-
 
     return {
         addNode,
@@ -59,11 +68,12 @@ function buildNetworkCache(directed) {
         addLink,
         removeLink,
         toggleIsDirected,
+        updateNodeColor,
+        updateEdgeColor,
         clear,
         updateNetworkData,
         getState
     };
-
 }
 
 function buildDOMCache() {
@@ -81,7 +91,9 @@ function buildDOMCache() {
         nodeNameInput: '#node-name',
         edgeFromInput: '#from-id',
         edgeToInput: '#to-id',
-        isDirectedInput: '#is-directed-input'
+        isDirectedInput: '#is-directed-input',
+        nodeColorInput: '#node-color-input',
+        edgeColorInput: '#edge-color-input'
     };
 
     return {
@@ -99,7 +111,9 @@ function buildDOMCache() {
             nodeNameInput: document.querySelector(selectors.nodeNameInput),
             edgeFromInput: document.querySelector(selectors.edgeFromInput),
             edgeToInput: document.querySelector(selectors.edgeToInput),
-            isDirectedInput: document.querySelector(selectors.isDirectedInput)
+            isDirectedInput: document.querySelector(selectors.isDirectedInput),
+            nodeColorInput: document.querySelector(selectors.nodeColorInput),
+            edgeColorInput: document.querySelector(selectors.edgeColorInput)
         }
     };
 }

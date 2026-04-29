@@ -76,62 +76,19 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
                 .on("end", dragended);
         }
 
-
-
-
-
     }
-
-
 
     draw(data);
 
     // Exposed Functions
-    function addNode(node) {
-        const canAdd = data.nodes.findIndex(n => n.id === node.id) === -1;
-        if(canAdd) {
-            data.nodes.push({...node});
-            draw(data);
-        }
-    }
-
-    function removeNode(id) {
-        const index = data.nodes.findIndex(n => n.id === id);
-        console.log(id,index,data.nodes);
-        if(index !== -1) {
-            data.nodes.splice(index,1);
-            const edgeIndices = data.links.reduce((agg, e, index) => {
-                if(e.source === id || e.target === id) return [...agg,index];
-                return [...agg];
-            },[]);
-            edgeIndices.forEach(i => data.links.splice(i,1));
-            draw(data);
-        }
-    }
-
-    function addLink({source,target}) {
-        const canAdd = data.links.findIndex(e => e.source === source && e.target === target) === -1;
-        if(canAdd) {
-            console.log({source,target});
-            data.links.push({source, target});
-            draw(data);
-        }
-    }
-
-    function removeLink({source,target}) {
-        const index = data.links.findIndex(e => e.source.id === source && e.target.id === target);
-        console.log(source,target,index,data.links);
-        if(index !== -1) {
-            data.links.splice(index,1);
-            draw(data);
-        }
+    function updateAllData({nodes,links}) {
+        data.nodes = [...nodes.map(n => ({...n}))];
+        data.links = [...links.map(l => ({...l}))];
+        draw(data);
     }
 
     return {
-        addNode,
-        removeNode,
-        addLink,
-        removeLink
+        updateAllData
     };
 
 }

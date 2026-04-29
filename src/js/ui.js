@@ -1,16 +1,66 @@
 
-export function addNodeRow(nodeId, name) {
+export function addNodeRow(nodeId, name, nodeContainer, removeNodeCallback) {
+    if(nodeId && name) {
+        const row = document.createElement('div');
+        row.setAttribute("id",`node-row-${nodeId}`);
+        const idContainer = document.createElement('span');
+        const nameContainer = document.createElement('span');
+        const removeBtn = document.createElement('button');
+        removeBtn.innerText = 'Delete';
+        removeBtn.classList.add('btn','btn-danger');
+        removeBtn.setAttribute('data-node-id',nodeId);
+        removeBtn.addEventListener('click',removeNodeCallback);
 
+        idContainer.appendChild(document.createTextNode(nodeId));
+        nameContainer.appendChild(document.createTextNode(name));
+        row.append(idContainer,nameContainer,removeBtn);
+        nodeContainer.appendChild(row);
+        return true;
+    }
+    return false;
 }
 
-export function deleteNodeRow(container,nodeId) {
-
+export function deleteNodeRow(nodeId) {
+    if(nodeId) {
+        const rowId = `node-row-${nodeId}`;
+        let row = document.querySelector(`#${rowId}`);
+        row.remove();
+        row = null;
+        return true;
+    }
+    return false;
 }
 
-export function addEdgeRow(from,to) {
+export function addEdgeRow(from,to,edgeContainer,removeEdgeCallback) {
+    if(from && to) {
+        const row = document.createElement('div');
+        row.setAttribute("id",`row-from-${from}-to-${to}`);
+        const fromContainer = document.createElement('span');
+        const toContainer = document.createElement('span');
+        const removeBtn = document.createElement('button');
+        removeBtn.innerText = 'Delete';
+        removeBtn.classList.add('btn','btn-danger');
+        removeBtn.setAttribute('data-from-id',from);
+        removeBtn.setAttribute('data-to-id',to);
+        removeBtn.addEventListener('click',removeEdgeCallback);
 
+        fromContainer.appendChild(document.createTextNode(from));
+        toContainer.appendChild(document.createTextNode(to));
+        row.append(fromContainer,toContainer,removeBtn);
+        edgeContainer.appendChild(row);
+        return true;
+    }
+    return false;
 }
 
-export function deleteEdgeRow(container,from,to) {
-
+export function deleteEdgeRow(from,to) {
+    if(from && to) {
+        const rowId = `row-from-${from}-to-${to}`;
+        let row = document.querySelector(`#${rowId}`);
+        console.log('row: ',row);
+        row.remove();
+        row = null;
+        return true;
+    }
+    return false;
 }

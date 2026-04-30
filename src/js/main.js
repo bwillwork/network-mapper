@@ -2,6 +2,7 @@
 import '../scss/styles.scss'
 
 // Import all of Bootstrap’s JS
+import * as _ from 'lodash';
 import {Popover} from 'bootstrap';
 import {createGraph} from "./network";
 import {domCache,networkCache} from './cache'
@@ -15,10 +16,10 @@ const selectors = domCache.selectors;
 const popovers = elms.popovers;
 popovers.forEach(popover => (new Popover(popover)));
 
-const dimensions = {width: elms.svg.offsetWidth, height: 500};
+const dimensions = {width: elms.svgContainer.offsetWidth, height: 500};
 //console.log(dimensions);
 
-const network = createGraph(selectors.svg,{nodes:[],links:[]},dimensions);
+const network = createGraph(selectors.svgContainer,{nodes:[],links:[]},dimensions);
 
 function addNode() {
     console.log('add node');
@@ -92,6 +93,7 @@ elms.showNodeLabelsInput.addEventListener('change',function () {
     network.setShowLabels(showNodeLabels);
 });
 
+elms.distanceFactorInput.value = defaults.distance.factor;
 elms.distanceFactorInput.addEventListener('change',function() {
     console.log('value: ',elms.distanceFactorInput.value);
     const distanceFactor = parseInt(elms.distanceFactorInput.value);
@@ -133,3 +135,45 @@ elms.submitBtn.addEventListener('click',function() {
     const networkData = networkCache.getState().network;
     network.updateNetworkData(networkData);
 });
+
+//<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+elms.downloadBtn.addEventListener('click',function() {
+    const svg = elms.svgContainer.querySelector('svg');
+    const svgNS = "http://www.w3.org/2000/svg";
+    const svgCopy = document.createElementNS(svgNS, "svg");
+    svgCopy.setAttribute("width", `${dimensions.width}px`);
+    svgCopy.setAttribute("height", `${dimensions.height}px`);
+    svgCopy.style.backgroundColor = networkCache.getState().colors.background;
+    svgCopy.innerHTML = svg.innerHTML;
+
+    svgToPng(svgCopy,dimensions.width,dimensions.height, function(url) {
+
+        const a = document.createElement('a');
+        a.setAttribute('href',url);
+        a.setAttribute('download','network.png');
+        a.click();
+    });
+});
+
+function svgToPng(svgElement, width, height, callback) {
+
+    const svgData = new XMLSerializer().serializeToString(svgElement);
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = width;
+    canvas.height = height;
+
+    const img = new Image();
+    const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+
+    const url = URL.createObjectURL(svgBlob);
+    img.src = url;
+    img.onload = function() {
+        ctx.clearRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+        const pngDataUrl = canvas.toDataURL('image/png');
+        URL.revokeObjectURL(url); // Cleanup memory
+        callback(pngDataUrl);
+    };
+}

@@ -12,9 +12,6 @@ function buildNetworkCache(directed) {
         links: []
     };
 
-
-    // Private Functions
-
     // Exposed Functions
     function addNode(node) {
         const canAdd = data.nodes.findIndex(n => n.id === node.id) === -1;
@@ -91,7 +88,7 @@ function buildDOMCache() {
 
     const selectors = {
         popovers: '[data-bs-toggle="popover"]',
-        svg: '#graph',
+        svgContainer: '#graph',
         jsonInput: '#json-input',
         submitBtn: '#submit-btn',
         nodeContainer: '#nodes',
@@ -107,14 +104,15 @@ function buildDOMCache() {
         edgeColorInput: '#edge-color-input',
         showNodeLabelsInput: '#show-node-labels-input',
         backgroundColorInput: '#background-color-input',
-        distanceFactorInput: '#distance-factor-input'
+        distanceFactorInput: '#distance-factor-input',
+        downloadBtn: '#download-btn'
     };
 
     return {
         selectors,
         elms: {
             popovers: document.querySelectorAll(selectors.popovers),
-            svg: document.querySelector(selectors.svg),
+            svgContainer: document.querySelector(selectors.svgContainer),
             jsonInput: document.querySelector(selectors.jsonInput),
             submitBtn: document.querySelector(selectors.submitBtn),
             nodeContainer: document.querySelector(selectors.nodeContainer),
@@ -130,7 +128,8 @@ function buildDOMCache() {
             edgeColorInput: document.querySelector(selectors.edgeColorInput),
             showNodeLabelsInput: document.querySelector(selectors.showNodeLabelsInput),
             backgroundColorInput: document.querySelector(selectors.backgroundColorInput),
-            distanceFactorInput: document.querySelector(selectors.distanceFactorInput)
+            distanceFactorInput: document.querySelector(selectors.distanceFactorInput),
+            downloadBtn: document.querySelector(selectors.downloadBtn)
         }
     };
 }

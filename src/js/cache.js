@@ -1,10 +1,11 @@
 import * as _ from 'lodash';
-import constants from "./constants";
+import defaults from "./defaults";
 
 function buildNetworkCache(directed) {
 
-    let isDirected = _.isBoolean(directed) && directed;// Defaults to a non-directed graph network
-    let colors = {...constants.colors};
+    let isDirected = defaults.isDirected;
+    let colors = {...defaults.colors};
+    let showNodeLabels = defaults.showNodeLabels;
     const data = {
         nodes: [],
         links: []
@@ -41,6 +42,9 @@ function buildNetworkCache(directed) {
     function toggleIsDirected() {
         isDirected = !isDirected;
     }
+    function toggleShowNodeLabels() {
+        showNodeLabels = !showNodeLabels;
+    }
     function updateNodeColor(newColor) {
         colors.nodes = newColor;
     }
@@ -59,7 +63,7 @@ function buildNetworkCache(directed) {
         data.links = [...json.links];
     }
     function getState() {
-        return {colors,isDirected,network: {...data}};
+        return {colors,isDirected,showNodeLabels,network: {...data}};
     }
 
     return {
@@ -68,6 +72,7 @@ function buildNetworkCache(directed) {
         addLink,
         removeLink,
         toggleIsDirected,
+        toggleShowNodeLabels,
         updateNodeColor,
         updateEdgeColor,
         updateBackgroundColor,

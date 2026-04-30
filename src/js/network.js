@@ -1,12 +1,12 @@
 import * as _ from 'lodash';
 import * as d3 from "d3";
-import constants from "./constants";
+import defaults from "./defaults";
 
 export function createGraph(containerId, {nodes,links}, {width,height}) {
 
-    let isDirected = constants.isDirected;
-    let colors = {...constants.colors};
-    let showNodeLabels = constants.showNodeLabels;
+    let isDirected = defaults.isDirected;
+    let colors = {...defaults.colors};
+    let showNodeLabels = defaults.showNodeLabels;
     const data = {
         nodes: [...nodes],
         links: [...links]
@@ -40,7 +40,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         svg.selectAll(`g`).remove();
 
         const forceLink = d3.forceLink(data.links).id((d) => d.id);
-        const forceCollide = d3.forceCollide().radius(constants.radius);
+        const forceCollide = d3.forceCollide().radius(defaults.radius);
         const forceManyBody = d3.forceManyBody();
         const forceCenter = d3.forceCenter(width / 2, height / 2)
 
@@ -78,7 +78,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
                 .append('g');
 
             node.append("circle")
-                .attr("r", constants.radius)
+                .attr("r", defaults.radius)
                 .attr("fill",colors.nodes);
 
             node.append('text')
@@ -92,7 +92,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
                 .selectAll("circle")
                 .data(data.nodes)
                 .join("circle")
-                .attr("r", constants.radius)
+                .attr("r", defaults.radius)
                 .attr("fill",colors.nodes);
 
             node.call(drag(simulation))
@@ -142,6 +142,11 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         draw(data);
     }
 
+    function setShowLabels(value) {
+        showNodeLabels = _.isBoolean(value) && value;// Always default to false
+        draw(data);
+    }
+
     function updateColors(newColors) {
         colors = {...newColors};
         draw(data);
@@ -150,6 +155,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
     return {
         updateNetworkData,
         setIsDirected,
+        setShowLabels,
         updateColors
     };
 

@@ -24,8 +24,19 @@ export function deleteNodeRow(nodeId) {
     if(nodeId) {
         const rowId = `node-row-${nodeId}`;
         let row = document.querySelector(`#${rowId}`);
+        const fromEdges = document.querySelectorAll(`[data-from-id="${nodeId}"]`);
+        const toEdges = document.querySelectorAll(`[data-to-id="${nodeId}"]`);
+        let edgeRows = [...Array.from(fromEdges),...Array.from(toEdges)];
+
         row.remove();
         row = null;
+
+        while(edgeRows.length > 0) {
+            let eRow = edgeRows.pop();
+            eRow.remove();
+            eRow = null;
+        }
+
         return true;
     }
     return false;

@@ -6,7 +6,7 @@ import {Popover} from 'bootstrap';
 import {createGraph} from "./network";
 import {domCache,networkCache} from './cache'
 import {addEdgeRow, addNodeRow, deleteEdgeRow, deleteNodeRow} from "./ui";
-import constants from "./constants";
+import constants from "./defaults";
 
 const elms = domCache.elms;
 const selectors = domCache.selectors;
@@ -84,7 +84,17 @@ elms.isDirectedInput.addEventListener('change',function () {
     network.setIsDirected(isDirected);
 });
 
-// TODO: Add label functionality
+elms.showNodeLabelsInput.checked = constants.isDirected;
+elms.showNodeLabelsInput.addEventListener('change',function () {
+    console.log('This has changed');
+    networkCache.toggleShowNodeLabels();
+    const showNodeLabels = networkCache.getState().showNodeLabels;
+    network.setShowLabels(showNodeLabels);
+});
+
+elms.forceStrengthInput.addEventListener('change',function() {
+    console.log('value: ',elms.forceStrengthInput.value);
+});
 
 elms.nodeColorInput.value = constants.colors.nodes;
 elms.nodeColorInput.addEventListener('change',function() {

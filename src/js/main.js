@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {Popover} from 'bootstrap';
 import {createGraph} from "./network";
 import {domCache,networkCache} from './cache'
-import {addEdgeRow, addNodeRow, deleteEdgeRow, deleteNodeRow} from "./ui";
+import {addEdgeRow, addNodeRow, deleteEdgeRow, deleteNodeRow, updateControls, updateJson} from "./ui";
 import defaults from "./defaults";
 
 const elms = domCache.elms;
@@ -31,6 +31,7 @@ function addNode() {
         networkCache.addNode({id: parseInt(idInputVal),name: nameInputVal});
         const networkData = networkCache.getState().network;
         network.updateNetworkData(networkData);
+        updateJson(networkCache.getState().network,elms.jsonInput);
     }
 
 }
@@ -44,6 +45,7 @@ function removeNode() {
         networkCache.removeNode(parseInt(nodeId));
         const networkData = networkCache.getState().network;
         network.updateNetworkData(networkData);
+        updateJson(networkCache.getState().network,elms.jsonInput);
     }
 }
 
@@ -58,6 +60,7 @@ function addLink() {
         networkCache.addLink(link);
         const networkData = networkCache.getState().network;
         network.updateNetworkData(networkData);
+        updateJson(networkCache.getState().network,elms.jsonInput);
     }
 }
 function removeLink() {
@@ -71,6 +74,7 @@ function removeLink() {
         networkCache.removeLink(link);
         const networkData = networkCache.getState().network;
         network.updateNetworkData(networkData);
+        updateJson(networkCache.getState().network,elms.jsonInput);
     }
 }
 
@@ -131,12 +135,14 @@ elms.backgroundColorInput.addEventListener('change',function() {
 
 elms.submitBtn.addEventListener('click',function() {
     const data = JSON.parse(elms.jsonInput.value);
+    const previousNetwork = networkCache.getState().network;
     networkCache.updateNetworkData(data);
-    const networkData = networkCache.getState().network;
-    network.updateNetworkData(networkData);
+    const newNetwork = networkCache.getState().network;
+    network.updateNetworkData(newNetwork);
+    updateControls(previousNetwork,newNetwork,elms.nodeContainer,removeNode,elms.edgeContainer,removeLink);
 });
 
-//<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+
 elms.downloadBtn.addEventListener('click',function() {
     const svg = elms.svgContainer.querySelector('svg');
     const svgNS = "http://www.w3.org/2000/svg";

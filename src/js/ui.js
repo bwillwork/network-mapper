@@ -75,3 +75,31 @@ export function deleteEdgeRow(from,to) {
     }
     return false;
 }
+
+export function updateControls(
+    previousNetwork,
+    newNetwork,
+    nodeContainer,
+    removeNodeCallback,
+    edgeContainer,
+    removeEdgeCallback) {
+
+    const oldNodes = previousNetwork.nodes;
+    while(oldNodes.length > 0) {
+        let node = oldNodes.pop();
+        deleteNodeRow(node.id);
+        node = null;
+    }
+
+    const newNodes = newNetwork.nodes;
+    const newEdges = newNetwork.links;
+
+    console.log(previousNetwork,newNetwork);
+
+    newNodes.forEach(n => addNodeRow(n.id,n.name,nodeContainer,removeNodeCallback));
+    newEdges.forEach(e => addEdgeRow(e.source,e.target,edgeContainer,removeEdgeCallback));
+}
+
+export function updateJson(networkData,jsonInputElm) {
+    jsonInputElm.value = JSON.stringify(networkData,null,2);
+}

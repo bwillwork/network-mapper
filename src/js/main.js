@@ -17,12 +17,10 @@ const popovers = elms.popovers;
 popovers.forEach(popover => (new Popover(popover)));
 
 const dimensions = {width: elms.svgContainer.offsetWidth, height: 500};
-//console.log(dimensions);
 
 const network = createGraph(selectors.svgContainer,{nodes:[],links:[]},dimensions);
 
 function addNode() {
-    console.log('add node');
     const idInputVal = `${document.querySelector('#node-id').value}`;
     const nameInputVal = `${document.querySelector('#node-name').value}`;
 
@@ -37,7 +35,6 @@ function addNode() {
 }
 
 function removeNode() {
-    console.log('remove node - ',this);
     const nodeId = this.getAttribute("data-node-id");
 
     const success = deleteNodeRow(nodeId)
@@ -50,7 +47,6 @@ function removeNode() {
 }
 
 function addLink() {
-    console.log('add edge');
     const fromInputVal = `${document.querySelector('#from-id').value}`;
     const toInputVal = `${document.querySelector('#to-id').value}`;
 
@@ -64,7 +60,6 @@ function addLink() {
     }
 }
 function removeLink() {
-    console.log('remove edge - ',this);
     const fromId = this.getAttribute("data-from-id");
     const toId = this.getAttribute("data-to-id");
 
@@ -83,7 +78,6 @@ elms.addEdgeBtn.addEventListener('click',addLink);
 
 elms.isDirectedInput.checked = defaults.isDirected;
 elms.isDirectedInput.addEventListener('change',function () {
-    console.log('This has changed');
     networkCache.toggleIsDirected();
     const isDirected = networkCache.getState().isDirected;
     network.setIsDirected(isDirected);
@@ -91,7 +85,6 @@ elms.isDirectedInput.addEventListener('change',function () {
 
 elms.showNodeLabelsInput.checked = defaults.isDirected;
 elms.showNodeLabelsInput.addEventListener('change',function () {
-    console.log('This has changed');
     networkCache.toggleShowNodeLabels();
     const showNodeLabels = networkCache.getState().showNodeLabels;
     network.setShowLabels(showNodeLabels);
@@ -99,7 +92,6 @@ elms.showNodeLabelsInput.addEventListener('change',function () {
 
 elms.distanceFactorInput.value = defaults.distance.factor;
 elms.distanceFactorInput.addEventListener('change',function() {
-    console.log('value: ',elms.distanceFactorInput.value);
     const distanceFactor = parseInt(elms.distanceFactorInput.value);
     networkCache.updateDistanceFactor(distanceFactor);
     const distance = networkCache.getState().distance;
@@ -108,7 +100,6 @@ elms.distanceFactorInput.addEventListener('change',function() {
 
 elms.nodeColorInput.value = defaults.colors.nodes;
 elms.nodeColorInput.addEventListener('change',function() {
-    console.log('color: ',elms.nodeColorInput.value);
     const newColor = elms.nodeColorInput.value;
     networkCache.updateNodeColor(newColor);
     const colors = networkCache.getState().colors;
@@ -117,7 +108,6 @@ elms.nodeColorInput.addEventListener('change',function() {
 
 elms.edgeColorInput.value = defaults.colors.edges;
 elms.edgeColorInput.addEventListener('change',function() {
-    console.log('color: ',elms.edgeColorInput.value);
     const newColor = elms.edgeColorInput.value;
     networkCache.updateEdgeColor(newColor);
     const colors = networkCache.getState().colors;
@@ -126,7 +116,6 @@ elms.edgeColorInput.addEventListener('change',function() {
 
 elms.backgroundColorInput.value = defaults.colors.background;
 elms.backgroundColorInput.addEventListener('change',function() {
-    console.log('color: ',elms.backgroundColorInput.value);
     const newColor = elms.backgroundColorInput.value;
     networkCache.updateBackgroundColor(newColor);
     const colors = networkCache.getState().colors;

@@ -68,7 +68,6 @@ export function deleteEdgeRow(from,to) {
     if(from && to) {
         const rowId = `row-from-${from}-to-${to}`;
         let row = document.querySelector(`#${rowId}`);
-        console.log('row: ',row);
         row.remove();
         row = null;
         return true;
@@ -93,8 +92,6 @@ export function updateControls(
 
     const newNodes = newNetwork.nodes;
     const newEdges = newNetwork.links;
-
-    console.log(previousNetwork,newNetwork);
 
     newNodes.forEach(n => addNodeRow(n.id,n.name,nodeContainer,removeNodeCallback));
     newEdges.forEach(e => addEdgeRow(e.source,e.target,edgeContainer,removeEdgeCallback));

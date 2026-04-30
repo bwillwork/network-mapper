@@ -33,7 +33,6 @@ function buildNetworkCache(directed) {
         if(canAdd) data.links.push({source, target});
     }
     function removeLink({source,target}) {
-        console.log(data.links);
         const index = data.links.findIndex(e => e.source === source && e.target === target);
         if(index !== -1) data.links.splice(index,1);
     }

@@ -6,7 +6,7 @@ import {Popover} from 'bootstrap';
 import {createGraph} from "./network";
 import {domCache,networkCache} from './cache'
 import {addEdgeRow, addNodeRow, deleteEdgeRow, deleteNodeRow} from "./ui";
-import constants from "./defaults";
+import defaults from "./defaults";
 
 const elms = domCache.elms;
 const selectors = domCache.selectors;
@@ -76,7 +76,7 @@ function removeLink() {
 elms.addNodeBtn.addEventListener('click',addNode);
 elms.addEdgeBtn.addEventListener('click',addLink);
 
-elms.isDirectedInput.checked = constants.isDirected;
+elms.isDirectedInput.checked = defaults.isDirected;
 elms.isDirectedInput.addEventListener('change',function () {
     console.log('This has changed');
     networkCache.toggleIsDirected();
@@ -84,7 +84,7 @@ elms.isDirectedInput.addEventListener('change',function () {
     network.setIsDirected(isDirected);
 });
 
-elms.showNodeLabelsInput.checked = constants.isDirected;
+elms.showNodeLabelsInput.checked = defaults.isDirected;
 elms.showNodeLabelsInput.addEventListener('change',function () {
     console.log('This has changed');
     networkCache.toggleShowNodeLabels();
@@ -92,11 +92,15 @@ elms.showNodeLabelsInput.addEventListener('change',function () {
     network.setShowLabels(showNodeLabels);
 });
 
-elms.forceStrengthInput.addEventListener('change',function() {
-    console.log('value: ',elms.forceStrengthInput.value);
+elms.distanceFactorInput.addEventListener('change',function() {
+    console.log('value: ',elms.distanceFactorInput.value);
+    const distanceFactor = parseInt(elms.distanceFactorInput.value);
+    networkCache.updateDistanceFactor(distanceFactor);
+    const distance = networkCache.getState().distance;
+    network.updateDistance(distance);
 });
 
-elms.nodeColorInput.value = constants.colors.nodes;
+elms.nodeColorInput.value = defaults.colors.nodes;
 elms.nodeColorInput.addEventListener('change',function() {
     console.log('color: ',elms.nodeColorInput.value);
     const newColor = elms.nodeColorInput.value;
@@ -105,7 +109,7 @@ elms.nodeColorInput.addEventListener('change',function() {
     network.updateColors(colors);
 });
 
-elms.edgeColorInput.value = constants.colors.edges;
+elms.edgeColorInput.value = defaults.colors.edges;
 elms.edgeColorInput.addEventListener('change',function() {
     console.log('color: ',elms.edgeColorInput.value);
     const newColor = elms.edgeColorInput.value;
@@ -114,7 +118,7 @@ elms.edgeColorInput.addEventListener('change',function() {
     network.updateColors(colors);
 });
 
-elms.backgroundColorInput.value = constants.colors.background;
+elms.backgroundColorInput.value = defaults.colors.background;
 elms.backgroundColorInput.addEventListener('change',function() {
     console.log('color: ',elms.backgroundColorInput.value);
     const newColor = elms.backgroundColorInput.value;

@@ -7,5 +7,10 @@ export default {
     radius: 10,
     isDirected: false,
     showNodeLabels: false,
-    force: 50
+    force: 50,
+    distance: {
+        unit: 2,
+        factor: 15,
+        strength: 0.5
+    }
 }

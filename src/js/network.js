@@ -7,6 +7,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
     let isDirected = defaults.isDirected;
     let colors = {...defaults.colors};
     let showNodeLabels = defaults.showNodeLabels;
+    let distance = {...defaults.distance};
     const data = {
         nodes: [...nodes],
         links: [...links]
@@ -21,14 +22,14 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
     // Adding arrows to the definitions
     const arrowMarker = svg.append("svg:defs").append("svg:marker")
         .attr("id", "arrow")
-        .attr("viewBox", "0 -5 10 10")
+        .attr("viewBox", "0 -10 20 20")
         .attr('refX', 30)//so that it comes towards the center.
-        .attr("markerWidth", 5)
-        .attr("markerHeight", 5)
+        .attr("markerWidth", 10)
+        .attr("markerHeight", 10)
         .attr("orient", "auto")
         .append("svg:path")
         .attr("fill",colors.edges)
-        .attr("d", "M0,-5L10,0L0,5");
+        .attr("d", "M0,-10L20,0L0,10");
 
     svg = svg.append("g");
 
@@ -39,7 +40,10 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
 
         svg.selectAll(`g`).remove();
 
-        const forceLink = d3.forceLink(data.links).id((d) => d.id);
+        const forceLink = d3.forceLink(data.links)
+            .id((d) => d.id)
+            .distance(distance.unit * distance.factor)
+            .strength(distance.strength);
         const forceCollide = d3.forceCollide().radius(defaults.radius);
         const forceManyBody = d3.forceManyBody();
         const forceCenter = d3.forceCenter(width / 2, height / 2)
@@ -147,6 +151,11 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         draw(data);
     }
 
+    function updateDistance(newDistance) {
+        distance = {...newDistance};
+        draw(data);
+    }
+
     function updateColors(newColors) {
         colors = {...newColors};
         draw(data);
@@ -156,6 +165,7 @@ export function createGraph(containerId, {nodes,links}, {width,height}) {
         updateNetworkData,
         setIsDirected,
         setShowLabels,
+        updateDistance,
         updateColors
     };
 

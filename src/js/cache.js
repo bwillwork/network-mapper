@@ -6,6 +6,7 @@ function buildNetworkCache(directed) {
     let isDirected = defaults.isDirected;
     let colors = {...defaults.colors};
     let showNodeLabels = defaults.showNodeLabels;
+    let distance = {...defaults.distance};
     const data = {
         nodes: [],
         links: []
@@ -45,6 +46,9 @@ function buildNetworkCache(directed) {
     function toggleShowNodeLabels() {
         showNodeLabels = !showNodeLabels;
     }
+    function updateDistanceFactor(value) {
+        distance.factor = _.clamp(value,1,100);
+    }
     function updateNodeColor(newColor) {
         colors.nodes = newColor;
     }
@@ -63,7 +67,7 @@ function buildNetworkCache(directed) {
         data.links = [...json.links];
     }
     function getState() {
-        return {colors,isDirected,showNodeLabels,network: {...data}};
+        return {colors,isDirected,showNodeLabels,distance,network: {...data}};
     }
 
     return {
@@ -73,6 +77,7 @@ function buildNetworkCache(directed) {
         removeLink,
         toggleIsDirected,
         toggleShowNodeLabels,
+        updateDistanceFactor,
         updateNodeColor,
         updateEdgeColor,
         updateBackgroundColor,
@@ -102,7 +107,7 @@ function buildDOMCache() {
         edgeColorInput: '#edge-color-input',
         showNodeLabelsInput: '#show-node-labels-input',
         backgroundColorInput: '#background-color-input',
-        forceStrengthInput: '#force-strength-input'
+        distanceFactorInput: '#distance-factor-input'
     };
 
     return {
@@ -125,7 +130,7 @@ function buildDOMCache() {
             edgeColorInput: document.querySelector(selectors.edgeColorInput),
             showNodeLabelsInput: document.querySelector(selectors.showNodeLabelsInput),
             backgroundColorInput: document.querySelector(selectors.backgroundColorInput),
-            forceStrengthInput: document.querySelector(selectors.forceStrengthInput)
+            distanceFactorInput: document.querySelector(selectors.distanceFactorInput)
         }
     };
 }
